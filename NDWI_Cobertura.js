@@ -1,5 +1,7 @@
 # NDWI_Sentinel-2
 Este codigo de Google Earth Engine permite calcular el NDWI para varías imágenes Sentinel 2
+// Link Directo a GEE
+//https://code.earthengine.google.com/0acdd5ffe3a0659bd1af69074bb6193d
 
 // Definir el polígono de la región de interés (ROI)
 var roi= ee.Geometry.Polygon(
