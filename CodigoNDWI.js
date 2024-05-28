@@ -12,8 +12,8 @@ var roi= ee.Geometry.Polygon(
 // Filtrar imágenes Sentinel-2 por fecha, ubicación y porcentaje nubosidad
 var collection = ee.ImageCollection('COPERNICUS/S2_SR')
   .filterBounds(roi)
-  .filterDate('2023-01-01', '2024-05-28')
-  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 4));
+  .filterDate('2023-01-01', '2024-05-15')
+  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 2));
 
 // Función para calcular el índice NDWI de cada imagen de la coleccion
 function calcularNDWI(image) {
@@ -36,7 +36,7 @@ var listaImagenes = collectionConNDWI.toList(collectionConNDWI.size());
 // Crear una lista para almacenar las áreas de cada imagen
 var areasList = [];
 
-// Iterar sobre cada imagen y visualizarla
+// Iterar sobre cada imagen para almacenarla en el listado
 for (var i = 0; i < listaImagenes.length().getInfo(); i++) {
   var image = ee.Image(listaImagenes.get(i));
   visualizarImagenes(image);
@@ -136,8 +136,8 @@ function visualizarImagenes(image) {
   var Cobpalette = ['blue', 'white'];
   Map.addLayer(seaWhere, {min: 1, max: 2,   palette: Cobpalette}, 'Cobertura Agua ' + fechaStr);
   // MApear poligonos de cobertura
-  Map.addLayer(coberturaAguaPoligonos, 
-  {color: 'black', width: 1},   'Cobertura Agua Polígonos ' + fechaStr);
+  //Map.addLayer(coberturaAguaPoligonos, 
+  //{color: 'black', width: 1},   'Cobertura Agua Polígonos ' + fechaStr);
   // Imprimir información sobre la imagen
   //print('Información de la imagen - Fecha:', fechaStr, 'ID:', image.id());
   
@@ -159,7 +159,7 @@ function visualizarImagenes(image) {
     description: nombreCobertura,
     folder: 'GEE_Resultados', // Ajusta la carpeta de destino
     scale: 10, // Ajusta la escala según tus necesidades
-    region: geometry,
+    region: roi,
     maxPixels: 1e13
   });
   
@@ -170,7 +170,7 @@ function visualizarImagenes(image) {
     description: nombreRGB,
     folder: 'GEE_Resultados', // Ajusta la carpeta de destino
     scale: 10, // Ajusta la escala según tus necesidades
-    region: geometry,
+    region: roi,
     maxPixels: 1e13
   });
   
@@ -181,7 +181,58 @@ function visualizarImagenes(image) {
     description: nombreNDWI,
     folder: 'GEE_Resultados', // Ajusta la carpeta de destino
     scale: 10, // Ajusta la escala según tus necesidades
-    region: geometry,
+    region: roi,
     maxPixels: 1e13
   });
 }
+
+// AGREGAR LEYENDA
+var panel = ui.Panel({
+  style: {
+    position: 'bottom-right',
+    padding: '5px;'
+  }
+});
+
+var title = ui.Label({
+  value: 'Clasificación',
+  style: {
+    fontSize: '12px',
+    fontWeight: 'bold',
+    margin: '0px;'
+  }
+});
+
+panel.add(title)
+
+var Cobpalette = ['blue', '#efefef'];
+var lc_class = ['Agua', 'vegetación']
+
+var list_legend = function(Cobpalette, description) {
+  
+  var c = ui.Label({
+    style: {
+      backgroundColor: Cobpalette,
+      padding: '10px',
+      margin: '4px'
+    }
+  });
+  
+  var ds = ui.Label({
+    value: description,
+    style: {
+      margin: '5px'
+    }
+  });
+  
+  return ui.Panel({
+    widgets: [c, ds],
+    layout: ui.Panel.Layout.Flow('horizontal')
+  });
+}
+
+for(var a = 0; a < 2; a++){
+  panel.add(list_legend(Cobpalette[a], lc_class[a]))
+}
+
+Map.add(panel)
