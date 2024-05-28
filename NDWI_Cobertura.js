@@ -5,11 +5,10 @@ Este codigo de Google Earth Engine permite calcular el NDWI para varías imágen
 
 // Definir el polígono de la región de interés (ROI)
 var roi= ee.Geometry.Polygon(
-        [[[-91.80096677197756,17.702695931702213],
-        [-91.6059594477588,17.702695931702213],
-        [-91.6059594477588,17.965463116030733], 
-        [-91.80096677197756,17.965463116030733], 
-        [-91.80096677197756,17.702695931702213]]], null, false);
+        [[[-91.84433469086221, 17.92798219201935], 
+        [-91.84433469086221, 17.699832557873403], 
+        [-91.60400876312784, 17.699832557873403], 
+        [-91.60400876312784, 17.92798219201935]]], null, false);
 
 // Filtrar imágenes Sentinel-2 por fecha, ubicación y porcentaje nubosidad
 var collection = ee.ImageCollection('COPERNICUS/S2_SR')
