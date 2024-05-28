@@ -1,3 +1,9 @@
+# NDWI_Sentinel-2
+Este codigo de Google Earth Engine permite calcular el NDVI y la cobertura vegetal de varías imágenes Sentinel 2
+
+Link Directo a GEE
+https://code.earthengine.google.com/81ef00d157e0abf47faf3cb0385d725d
+
 // Definir el polígono de la región de interés (ROI)
 var roi= ee.Geometry.Polygon(
         [[[-91.84433469086221, 17.92798219201935], 
